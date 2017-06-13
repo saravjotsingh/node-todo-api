@@ -6,6 +6,7 @@ var {
 var app = express();
 app.use(bodyParser.json());
 
+var port = process.env.PORT || 3000;
 
 var {
     mongoose
@@ -69,8 +70,8 @@ app.get('/todos/:id', (req, res) => {
 });
 
 
-app.listen(3000, () => {
-    console.log('listening on port 3000');
+app.listen(port, () => {
+    console.log('listening on',port);
 });
 
 
