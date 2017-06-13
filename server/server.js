@@ -61,7 +61,7 @@ app.get('/todos/:id', (req, res) => {
         if (!todos) {
             return res.status(400).send('Enter Coreect ID');
         }
-         res.status(200).send({todos});
+         res.status(200).send({todos} );
     }).catch((e) => {
         res.status(404).send()
     });

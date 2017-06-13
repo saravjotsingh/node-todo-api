@@ -41,9 +41,13 @@ var _id = '5936d86173503100d4ef8437';
 //}).catch((e)=>{console.log(e)});
 //
 
-User.findById({_id}).then((user) => {
-    if(!user){
+User.findById({
+    _id
+}).then((user) => {
+    if (!user) {
         return console.log(e);
     }
     console.log(user);
-}).catch((e)=>{console.log(e)});
+}).catch((e) => {
+    console.log(e)
+});
