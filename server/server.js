@@ -1,3 +1,15 @@
+var env = process.env.NODE_ENV || 'development';
+console.log('env*****',env);
+if(env==='development'){
+    process.env.PORT = 3000;
+    process.env.MONGODB_URI = "mongodb://localhost:27017/TodoApp"
+}else if(env==='test'){
+    process.env.PORT = 3000;
+    process.env.MONGODB_URI = "mongodb://localhost:27017/TodoAppTest"
+}
+
+
+const _ = require('lodash');
 var express = require('express');
 var bodyParser = require('body-parser');
 var {
@@ -6,7 +18,7 @@ var {
 var app = express();
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT;
 
 var {
     mongoose
@@ -69,9 +81,62 @@ app.get('/todos/:id', (req, res) => {
 
 });
 
+app.delete('/todos/:id',(req,res)=>{
+    var id = req.params.id;
+        
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send('Please Enter a Valid ID');
+        
+    }
+    
+    Todo.findByIdAndRemove({
+        _id:id
+    }).then((results)=>{
+        
+        if(!results){
+            return res.status(400).send('No Document found');
+        }
+        
+        res.status(200).send({results});
+    },(e)=>{
+        res.status(404).send(e);
+    });
+
+    
+});
+
+
+app.patch('/todos/:id',(req,res)=>{
+   var id = req.params.id;
+    var body = _.pick(req.body,['text','completed']);
+    
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send('Please Enter a Valid ID');
+        
+    }
+    
+    if(_.isBoolean(body.completed) && (body.completed)){
+        body.completedAt = new Date().getTime();
+    }else{
+        body.completed = false;
+        body.completedAt = null;
+    }
+    
+    Todo.findByIdAndUpdate(id,{$set:body},{new:true}).then((todo)=>{
+        if(!todo){
+            return res.send(400).send('Data not found');
+        }
+        res.status(200).send({todo});
+    },(e)=>{
+        res.status(400).send(e);
+    })
+    
+    
+});
+
 
 app.listen(port, () => {
-    console.log('listening on',port);
+    console.log(`listening ${port} this`);
 });
 
 
