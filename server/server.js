@@ -31,6 +31,7 @@ var {
 } = require('./models/user.js');
 
 
+var {authenticate} = require('./middleware/authenticate.js')
 app.post('/todos', (req, res) => {
 
     var todo = new Todo({
@@ -146,19 +147,24 @@ app.patch('/todos/:id', (req, res) => {
 
 
 
-app.post('/users', (req, res) => {
+app.post('/users',(req, res) => {
     var body = _.pick(req.body, ['email', 'password']);
 
     var user = new User(body);
 
     user.save().then(() => { 
-//        res.status(200).send(docs)
         return user.generateAuthToken();
     }).then((token)=>{
         res.header('x-auth',token).send(user); 
     }).catch((e) => {
         return res.status(400).send(e);
     });
+});
+
+
+
+app.get('/users/me',authenticate,(req,res)=>{
+    res.send(req.user);
 });
 
 
