@@ -1,12 +1,4 @@
-var env = process.env.NODE_ENV || 'development';
-console.log('env*****', env);
-if (env === 'development') {
-    process.env.PORT = 3000;
-    process.env.MONGODB_URI = "mongodb://localhost:27017/TodoApp"
-} else if (env === 'test') {
-    process.env.PORT = 3000;
-    process.env.MONGODB_URI = "mongodb://localhost:27017/TodoAppTest"
-}
+require('./config/config.js');
 
 
 const _ = require('lodash');
@@ -110,9 +102,7 @@ app.delete('/todos/:id', authenticate,(req, res) => {
             return res.status(404).send('No Document found');
         }
 
-        res.status(200).send({
-            results
-        });
+        res.status(200).send({results});
     }, (e) => {
         res.status(400).send(e);
     });

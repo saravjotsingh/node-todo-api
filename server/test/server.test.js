@@ -155,15 +155,15 @@ describe('DELETE /todos/:id', () => {
             });
     });
 
-    it('should nt remove todo', (done) => {
-        var hexID = todos[0]._id.toHexString();
-        request(app)
+    it('should not remove todo', (done) => {
+        var hexID = todos[1]._id.toHexString();
+            request(app)
             .delete(`/todos/${hexID}`)
-            .set('x-auth',users[1].tokens[0].token)
+            .set('x-auth',users[0].tokens[0].token)
             .expect(404)
-            .expect((res) => {
-                expect(res.body.results._id).toBe(hexID);
-            })
+//            .expect((res) => {
+//                expect(res.body.results._id).toBe(hexID);
+//            })
             .end((err, res) => {
                 if (err) {
                     return done(err);
